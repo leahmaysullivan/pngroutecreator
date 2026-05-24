@@ -8,7 +8,7 @@ import os
 # ==========================================
 # IMAGE PATH
 # ==========================================
-newest_image_path = r"/storage/emulated/0/Routes/cani.jpg"
+newest_image_path = "cani.jpg"
 
 # ==========================================
 # COLOUR DETECTION SETTINGS
@@ -90,4 +90,5 @@ print("===================================")
 print("")
 print("Saved to:")
 print(newest_thickened_path)
+
 print("")
