@@ -1,0 +1,320 @@
+# PNG Route Creator
+
+A simple Python script that extracts a red route line from a screenshot/map image, removes the background, thickens the route line, and exports it as a transparent PNG.
+
+---
+
+# What This Does
+
+The script:
+
+1. Loads a screenshot containing a red route line
+2. Detects the red route pixels
+3. Removes everything else
+4. Thickens the route line
+5. Saves a transparent PNG
+
+This is useful for:
+
+* Overlaying routes onto photos
+* Creating Strava-style graphics
+* Travel content
+* Route visualisations
+* Social media graphics
+
+---
+
+# Requirements
+
+Install Python packages:
+
+```bash
+pip install pillow numpy scipy
+```
+
+---
+
+# File Structure
+
+```plaintext
+project-folder/
+│
+├── png_route_creator.py
+├── Screenshot.png
+└── Screenshot_route.png
+```
+
+---
+
+# How To Use
+
+## 1. Save the Script
+
+Save the Python script as:
+
+```plaintext
+png_route_creator.py
+```
+
+---
+
+## 2. Edit the Image Path
+
+Inside the script, change:
+
+```python
+newest_image_path = r"C:\Users\YourName\Downloads\Screenshot.png"
+```
+
+Replace it with the path to your own image.
+
+Tip:
+
+* Use `r"..."` before the path
+* Or use forward slashes `/`
+
+Example:
+
+```python
+newest_image_path = r"C:\Users\LeahSullivan\Downloads\Screenshot 2025-06-22 170656.png"
+```
+
+---
+
+## 3. Run the Script
+
+Open:
+
+* Command Prompt
+* PowerShell
+* VS Code Terminal
+* Anaconda Prompt
+
+Navigate to your folder:
+
+```bash
+cd path/to/project-folder
+```
+
+Run:
+
+```bash
+python png_route_creator.py
+```
+
+---
+
+# Output
+
+The script automatically creates a new PNG file.
+
+Example:
+
+```plaintext
+Screenshot 2025-06-22 170656_route.png
+```
+
+The output image:
+
+* Has a transparent background
+* Contains only the route line
+* Has a thicker route line for overlays
+
+---
+
+# Adjusting Route Thickness
+
+This line controls thickness:
+
+```python
+thickened_mask = binary_dilation(mask, iterations=4)
+```
+
+Examples:
+
+```python
+iterations=2
+```
+
+Thin line
+
+```python
+iterations=6
+```
+
+Very thick line
+
+---
+
+# Changing Route Colour
+
+This controls the output colour:
+
+```python
+route_colour = [255, 0, 0, 255]
+```
+
+Format:
+
+```python
+[R, G, B, A]
+```
+
+Examples:
+
+White:
+
+```python
+[255, 255, 255, 255]
+```
+
+Blue:
+
+```python
+[0, 100, 255, 255]
+```
+
+Black:
+
+```python
+[0, 0, 0, 255]
+```
+
+---
+
+# Overlaying On Photos
+
+Android apps that work well:
+
+* PicsArt
+* PhotoLayers
+* Canva
+* PixelLab
+
+Simply:
+
+1. Open your photo
+2. Add the `_route.png`
+3. Resize and position
+4. Export
+
+---
+
+# Common Errors
+
+## Unicode Path Error
+
+If you see:
+
+```plaintext
+unicodeescape codec can't decode bytes
+```
+
+Use:
+
+```python
+r"C:\path\to\image.png"
+```
+
+---
+
+## File Not Found
+
+Make sure:
+
+* The image exists
+* The filename is correct
+* The extension matches (`.png`, `.jpg`, etc.)
+
+---
+
+# Full Script
+
+```python
+from PIL import Image
+import numpy as np
+from scipy.ndimage import binary_dilation
+import os
+
+# =========================
+# CHANGE THIS TO YOUR IMAGE
+# =========================
+newest_image_path = r"C:\Users\LeahSullivan\Downloads\Screenshot 2025-06-22 170656.png"
+
+# =========================
+# LOAD IMAGE
+# =========================
+image = Image.open(newest_image_path).convert("RGBA")
+data = np.array(image)
+
+# =========================
+# DETECT RED ROUTE LINE
+# =========================
+red_lower = np.array([150, 0, 0, 255])
+red_upper = np.array([255, 80, 80, 255])
+
+mask = (
+        (data[:, :, 0] >= red_lower[0]) &
+            (data[:, :, 0] <= red_upper[0]) &
+                (data[:, :, 1] >= red_lower[1]) &
+                    (data[:, :, 1] <= red_upper[1]) &
+                        (data[:, :, 2] >= red_lower[2]) &
+                            (data[:, :, 2] <= red_upper[2])
+)
+
+# =========================
+# THICKEN LINE
+# =========================
+thickened_mask = binary_dilation(mask, iterations=4)
+
+# =========================
+# CREATE TRANSPARENT OUTPUT
+# =========================
+output_data = np.zeros_like(data)
+
+# Red route colour
+route_colour = [255, 0, 0, 255]
+
+output_data[thickened_mask] = route_colour
+
+# =========================
+# CREATE OUTPUT FILENAME
+# =========================
+base, ext = os.path.splitext(newest_image_path)
+newest_thickened_path = f"{base}_route{ext}"
+
+# =========================
+# SAVE PNG
+# =========================
+output_image = Image.fromarray(output_data, mode="RGBA")
+output_image.save(newest_thickened_path)
+
+print("Saved route PNG to:")
+print(newest_thickened_path)
+```
+
+---
+
+# GitHub Upload
+
+I cannot upload directly to GitHub from here, but you can:
+
+1. Create a new repository on GitHub
+2. Upload:
+
+   * `png_route_creator.py`
+      * This README/index file
+      3. Commit changes
+
+      Or use Git locally:
+
+      ```bash
+      git init
+      git add .
+      git commit -m "Initial commit"
+      git branch -M main
+      git remote add origin YOUR_REPO_URL
+      git push -u origin main
+      ```
+      
+)
