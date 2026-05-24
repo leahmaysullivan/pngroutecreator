@@ -45,48 +45,49 @@ data = np.array(image)
 # ==========================================
 mask = (
     (data[:, :, 0] >= colour_lower[0]) &
-        (data[:, :, 0] <= colour_upper[0]) &
-            (data[:, :, 1] >= colour_lower[1]) &
-                (data[:, :, 1] <= colour_upper[1]) &
-                    (data[:, :, 2] >= colour_lower[2]) &
-                        (data[:, :, 2] <= colour_upper[2])
-                        )
+    (data[:, :, 0] <= colour_upper[0]) &
+    (data[:, :, 1] >= colour_lower[1]) &
+    (data[:, :, 1] <= colour_upper[1]) &
+    (data[:, :, 2] >= colour_lower[2]) &
+    (data[:, :, 2] <= colour_upper[2])
+)
+                    
 
-                        # ==========================================
-                        # THICKEN ROUTE LINE
-                        # ==========================================
-                        thickened_mask = binary_dilation(
-                            mask,
-                                iterations=route_thickness
-                                )
+# ==========================================
+# THICKEN ROUTE LINE
+# ==========================================
+thickened_mask = binary_dilation(
+mask,
+iterations=route_thickness
+)
 
-                                # ==========================================
-                                # CREATE TRANSPARENT OUTPUT
-                                # ==========================================
-                                output_data = np.zeros_like(data)
+# ==========================================
+# CREATE TRANSPARENT OUTPUT
+# ==========================================
+output_data = np.zeros_like(data)
 
-                                # Apply route colour
-                                output_data[thickened_mask] = route_colour
+# Apply route colour
+output_data[thickened_mask] = route_colour
 
-                                # ==========================================
-                                # CREATE OUTPUT FILENAME
-                                # ==========================================
-                                base, ext = os.path.splitext(newest_image_path)
+# ==========================================
+# CREATE OUTPUT FILENAME
+# ==========================================
+base, ext = os.path.splitext(newest_image_path)
 
-                                newest_thickened_path = f"{base}_route.png"
+newest_thickened_path = f"{base}_route.png"
 
-                                # ==========================================
-                                # SAVE PNG
-                                # ==========================================
-                                output_image = Image.fromarray(output_data, mode="RGBA")
+# ==========================================
+# SAVE PNG
+# ==========================================
+output_image = Image.fromarray(output_data, mode="RGBA")
 
-                                output_image.save(newest_thickened_path)
+output_image.save(newest_thickened_path)
 
-                                print("")
-                                print("===================================")
-                                print("ROUTE PNG CREATED")
-                                print("===================================")
-                                print("")
-                                print("Saved to:")
-                                print(newest_thickened_path)
-                                print("")
+print("")
+print("===================================")
+print("ROUTE PNG CREATED")
+print("===================================")
+print("")
+print("Saved to:")
+print(newest_thickened_path)
+print("")
