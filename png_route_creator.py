@@ -8,7 +8,7 @@ import os
 # ==========================================
 # IMAGE PATH
 # ==========================================
-newest_image_path = "cani2.jpg"
+newest_image_path = "volcanOsorno.jpg"
 
 # ==========================================
 # COLOUR DETECTION SETTINGS
