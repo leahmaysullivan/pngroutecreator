@@ -229,9 +229,14 @@
           const url = URL.createObjectURL(blob);
           dl.dataset.url = url;
           dl.href = url;
-          dl.download = baseName + "_route.png";
+          let n = 0;
+          try { n = parseInt(localStorage.getItem("routeCounter") || "0", 10) || 0; } catch (e) {}
+          n += 1;
+          try { localStorage.setItem("routeCounter", String(n)); } catch (e) {}
+          const fileName = baseName + "_route_" + n + ".png";
+          dl.download = fileName;
           dl.hidden = false;
-          statusEl.textContent = "Done. Saved as " + baseName + "_route.png";
+          statusEl.textContent = "Done. Download as " + fileName;
           goBtn.disabled = false;
         }, "image/png");
       } catch (e) {
